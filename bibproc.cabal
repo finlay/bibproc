@@ -1,0 +1,38 @@
+Name:                bibproc
+Version:             0.1
+Synopsis:            Process bibtex records
+Description:         Process bibtex records
+License:             BSD3
+Author:              Finlay Thompson
+Maintainer:          finlay@dragonfly.co.nz
+Copyright:           Copyright (c)2010, Finlay Thompson
+Stability:           Experimental
+Category:            Web
+Build-type:          Simple
+Cabal-version:       >=1.2
+
+Executable bib2html
+  main-is: bib2html.hs
+
+  Build-depends:
+    base >= 4 && < 5,
+    citeproc-hs,
+    pandoc,
+    directory,
+    filepath,
+    parsec
+
+Executable bib2sort
+  main-is: bib2sort.hs
+
+  Build-depends:
+    base >= 4 && < 5,
+    citeproc-hs,
+    pandoc,
+    directory,
+    filepath,
+    split,
+    parsec
+
+
+
