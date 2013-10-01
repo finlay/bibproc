@@ -26,7 +26,7 @@ main = do
     let wrapPandoc :: Block -> Pandoc
         wrapPandoc blk = Pandoc (Meta [] [] []) [blk]
     let toHtml :: Block -> String
-        toHtml = writeHtmlString defaultWriterOptions . wrapPandoc
+        toHtml = writeHtmlString def . wrapPandoc
     hSetEncoding stdout utf8
     putStr . unlines . map (toHtml . (renderPandoc' style)) $ results
 
@@ -40,7 +40,7 @@ getReferences bibfile bibhandle = do
 
 withTempFile :: String -> (FilePath -> Handle -> IO a) -> IO a
 withTempFile pattern func =
-    do tempdir <- catch (getTemporaryDirectory) (\_ -> return ".")
+    do tempdir <- catch (getTemporaryDirectory) (const $ return ".")
        (tempfile, temph) <- openTempFile tempdir pattern 
 
        finally (func tempfile temph) 

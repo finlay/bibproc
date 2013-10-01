@@ -16,23 +16,25 @@ Executable bib2html
 
   Build-depends:
     base >= 4 && < 5,
-    citeproc-hs,
-    pandoc,
+    citeproc-hs > 0.3,
+    pandoc == 1.10,
     directory,
     filepath,
     parsec
+
+  ghc-options: -O2 -Wall
 
 Executable bib2sort
   main-is: bib2sort.hs
 
   Build-depends:
     base >= 4 && < 5,
-    citeproc-hs,
-    pandoc,
+    citeproc-hs > 0.3,
+    pandoc == 1.10,
     directory,
     filepath,
     split,
     parsec
 
-
+  ghc-options: -O2 -Wall
 
