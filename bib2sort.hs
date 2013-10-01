@@ -1,9 +1,5 @@
 import System.Environment ( getArgs )
-import System.IO ( Handle, hPutStr, hClose, openTempFile, 
-                   hFlush, hSetEncoding, stdout, utf8 )
-import Control.Exception ( finally )
-import System.FilePath ()
-import System.Directory ( getTemporaryDirectory, removeFile )
+import System.IO ( hSetEncoding, stdout, utf8 )
 
 import Text.CSL
 import Text.CSL.Eval
@@ -25,7 +21,8 @@ main = do
     style        <- readCSLFile citefile
 
     -- Get references from standard in
-    refs <- withTempFile "bibfile.bib" getReferences
+    bibs <- getContents
+    refs <- readBiblioString Bibtex bibs
 
     let sorts = processSort style refs
     hSetEncoding stdout utf8
@@ -43,26 +40,9 @@ showKey ss =
       strip c =  (isAlpha c) || (isSpace c)
 
 processSort :: Style -> [Reference] -> [[Sorting]]
-processSort (Style {biblio = mb, csMacros = ms , styleLocale = l, csOptions = opts}) rs
+processSort (Style {biblio = mb, csMacros = ms , styleLocale = l, styleAbbrevs = sa, csOptions = opts}) rs
     = maybe [] process mb
     where
       opts'   b = mergeOptions (bibOptions b) opts
-      sort_   b = evalSorting (EvalSorting emptyCite {citePosition = "first"})l ms (opts' b) (bibSort b)
+      sort_   b = evalSorting (EvalSorting emptyCite {citePosition = "first"}) l ms (opts' b) (bibSort b) sa
       process b = map (sort_ b) $ rs
-
-getReferences :: FilePath -> Handle -> IO [Reference]
-getReferences bibfile bibhandle = do
-    bibs <- getContents 
-    hSetEncoding bibhandle utf8
-    hPutStr bibhandle bibs
-    hFlush bibhandle
-    readBiblioFile bibfile
-
-withTempFile :: String -> (FilePath -> Handle -> IO a) -> IO a
-withTempFile pattern func =
-    do tempdir <- catch (getTemporaryDirectory) (\_ -> return ".")
-       (tempfile, temph) <- openTempFile tempdir pattern 
-
-       finally (func tempfile temph) 
-               (hClose temph >> removeFile tempfile)
-
