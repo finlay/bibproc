@@ -1,5 +1,5 @@
 Name:                bibproc
-Version:             0.1
+Version:             0.2
 Synopsis:            Process bibtex records
 Description:         Process bibtex records
 License:             BSD3
@@ -17,7 +17,7 @@ Executable bib2html
   Build-depends:
     base >= 4 && < 5,
     citeproc-hs > 0.3,
-    pandoc == 1.10,
+    pandoc,
     directory,
     filepath,
     parsec
@@ -30,7 +30,7 @@ Executable bib2sort
   Build-depends:
     base >= 4 && < 5,
     citeproc-hs > 0.3,
-    pandoc == 1.10,
+    pandoc,
     directory,
     filepath,
     split,
