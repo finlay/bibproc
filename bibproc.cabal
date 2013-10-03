@@ -20,7 +20,8 @@ Executable bib2html
     pandoc,
     directory,
     filepath,
-    parsec
+    parsec,
+    HUnit
 
   ghc-options: -O2 -Wall
 
@@ -34,7 +35,8 @@ Executable bib2sort
     directory,
     filepath,
     split,
-    parsec
+    parsec,
+    HUnit
 
   ghc-options: -O2 -Wall
 
