@@ -4,6 +4,12 @@ import System.IO ( hSetEncoding, stdout, utf8 )
 import Text.CSL
 import Text.Pandoc
 
+wrapPandoc :: Block -> Pandoc
+wrapPandoc blk = Pandoc (Meta [] [] []) [blk]
+
+toHtml :: Block -> String
+toHtml = writeHtmlString def . wrapPandoc
+
 main :: IO ()
 main = do
     args <- getArgs
@@ -20,10 +26,5 @@ main = do
     refs <- readBiblioString Bibtex bibs
 
     let results = processBibliography procOpts style refs
-    let wrapPandoc :: Block -> Pandoc
-        wrapPandoc blk = Pandoc (Meta [] [] []) [blk]
-    let toHtml :: Block -> String
-        toHtml = writeHtmlString def . wrapPandoc
     hSetEncoding stdout utf8
     putStr . unlines . map (toHtml . (renderPandoc' style)) $ results
-
