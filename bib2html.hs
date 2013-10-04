@@ -1,29 +1,24 @@
-import System.Environment ( getArgs )
 import System.IO ( hSetEncoding, stdout, utf8 )
 
 import Text.CSL
 import Text.Pandoc
 
+import Bibproc.Init
+
+wrapPandoc :: Block -> Pandoc
+wrapPandoc blk = Pandoc (Meta [] [] []) [blk]
+
+toHtml :: Block -> String
+toHtml = writeHtmlString def . wrapPandoc
+
+bibHtml :: Style -> [Reference] -> [String]
+bibHtml style refs = map (toHtml . (renderPandoc' style)) results
+    where
+      results = processBibliography procOpts style refs
+
 main :: IO ()
 main = do
-    args <- getArgs
-    let citefile  :: FilePath
-        citefile = 
-          case args of
-            [filename] -> filename
-            _          -> error "Expects one .csl file"
-        
-    style        <- readCSLFile citefile
+    (style, refs) <- myinit
 
-    -- Get references from standard in
-    bibs <- getContents
-    refs <- readBiblioString Bibtex bibs
-
-    let results = processBibliography procOpts style refs
-    let wrapPandoc :: Block -> Pandoc
-        wrapPandoc blk = Pandoc (Meta [] [] []) [blk]
-    let toHtml :: Block -> String
-        toHtml = writeHtmlString def . wrapPandoc
     hSetEncoding stdout utf8
-    putStr . unlines . map (toHtml . (renderPandoc' style)) $ results
-
+    putStr . unlines $ bibHtml style refs

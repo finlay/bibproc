@@ -1,9 +1,10 @@
-import System.Environment ( getArgs )
 import System.IO ( hSetEncoding, stdout, utf8 )
 
 import Text.CSL
 import Text.CSL.Eval
 import Text.CSL.Style
+
+import Bibproc.Init
 
 import Data.List.Split
 import Data.Char
@@ -11,18 +12,7 @@ import Text.Printf
 
 main :: IO ()
 main = do
-    args <- getArgs
-    let citefile  :: FilePath
-        citefile = 
-          case args of
-            [filename] -> filename
-            _          -> error "Expects one .csl file"
-        
-    style        <- readCSLFile citefile
-
-    -- Get references from standard in
-    bibs <- getContents
-    refs <- readBiblioString Bibtex bibs
+    (style, refs) <- myinit
 
     let sorts = processSort style refs
     hSetEncoding stdout utf8
