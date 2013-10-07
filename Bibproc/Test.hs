@@ -4,7 +4,7 @@ import Bibproc.Init
 
 import Text.CSL
 import System.Exit
-import Test.HUnit
+import Test.HUnit hiding (counts)
 
 import Text.Heredoc
 
@@ -43,18 +43,18 @@ testUnpublished = TestCase ( do
     assertEqual "Test bibHtml on @Unpublished" ["<p>Brothers, N., Duckworth, A. R., Safina, C., &amp; Gilman, E. L. (2010). Seabird Bycatch in Pelagic Longline Fisheries Is Grossly Underestimated when Using Only Haul Data. doi:10.1371/journal.pone.0012491</p>"] (bibHtml style refs))
 
 flergl :: Char -> Maybe Char
-flergl a = Nothing
+flergl = const Nothing
 
 testEmpty :: Test
 testEmpty = TestCase $ assertEqual 
   "Should get Nothing from an empty string" Nothing ( flergl 'x' ) 
 
+tests :: Test
 tests = TestList [testArticle, testUnpublished, testEmpty]
 
-main :: IO (Int)
+
+main :: IO ()
 main = do
     counts <- runTestTT tests
     let issues = (errors counts) + (failures counts)
-    if issues == 0
-        then exitWith $ ExitSuccess
-        else exitWith $ ExitFailure issues
+    exitWith $ if issues == 0 then ExitSuccess else ExitFailure issues
