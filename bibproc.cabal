@@ -50,7 +50,9 @@ Executable bib2html_test
     directory,
     filepath,
     parsec,
-    HUnit
+    HUnit,
+    heredoc >= 0.2,
+    template-haskell
 
   ghc-options: -O2 -Wall
 
