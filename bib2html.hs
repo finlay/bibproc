@@ -1,6 +1,6 @@
 import System.IO ( hSetEncoding, stdout, utf8 )
 
-import Bibproc.Init
+import Bibproc.Init (myinit, bibHtml)
 
 main :: IO ()
 main = do
