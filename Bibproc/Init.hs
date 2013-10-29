@@ -32,7 +32,7 @@ myinit = do
     return (style, refs)
 
 wrapPandoc :: Block -> Pandoc
-wrapPandoc blk = Pandoc (Meta [] [] []) [blk]
+wrapPandoc blk = Pandoc nullMeta [blk]
 
 toHtml :: Block -> String
 toHtml = writeHtmlString def . wrapPandoc
